@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Background gradient: Indigo -->
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+
+    <!-- Emerald accent -->
+    <linearGradient id="accent" x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <!-- Shine effect -->
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Main rounded square background -->
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <rect width="64" height="64" rx="14" fill="url(#shine)"/>
+
+  <!-- Portfolio/Wallet shape with emerald accent -->
+  <!-- Left bar (darker, base) -->
+  <rect x="10" y="34" width="8" height="20" rx="2" fill="white" opacity="0.4"/>
+
+  <!-- Middle bar (medium) -->
+  <rect x="22" y="26" width="8" height="28" rx="2" fill="white" opacity="0.6"/>
+
+  <!-- Right bar (tallest, emerald highlight) -->
+  <rect x="34" y="16" width="8" height="38" rx="2" fill="url(#accent)"/>
+
+  <!-- Upward trend line in emerald -->
+  <polyline
+    points="14,32 26,24 38,14"
+    stroke="url(#accent)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Growth indicator dot in emerald -->
+  <circle cx="38" cy="14" r="2.5" fill="url(#accent)"/>
+
+  <!-- Subtle decorative element: upward arrow in emerald -->
+  <g opacity="0.85">
+    <path d="M 48 44 L 48 22 M 48 22 L 45 25 M 48 22 L 51 25" stroke="url(#accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>
