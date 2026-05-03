@@ -15,7 +15,7 @@ export function initApiInterceptor() {
     if (!urlStr.includes('/api/')) return originalFetch(input, init);
 
     // Các route này đã có server-side handler thật, không cần interceptor
-    const REAL_ROUTES = ['/api/sheets', '/api/price-reaction', '/api/risk', '/api/funds', '/api/investments/sync'];
+    const REAL_ROUTES = ['/api/sheets', '/api/price-reaction', '/api/risk', '/api/funds', '/api/investments/sync', '/api/allocation/suggest'];
     if (REAL_ROUTES.some(r => urlStr.includes(r))) return originalFetch(input, init);
 
     console.log('[API Interceptor] Intercepted:', urlStr);

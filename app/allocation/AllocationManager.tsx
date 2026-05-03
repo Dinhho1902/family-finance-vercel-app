@@ -174,7 +174,7 @@ export default function AllocationManager({
         note: confirming.note,
         details: JSON.stringify(confirming.suggestions)
       };
-      setAllocationHistory([newRecord, ...allocationHistory]);
+      setAllocationHistory([newRecord, ...allocationHistory.filter(r => r.month !== monthStr)]);
       setSuccess("Đã lưu phân bổ chính thức thành công!");
       setConfirming(null);
       setSuggestions([]);

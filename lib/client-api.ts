@@ -125,40 +125,8 @@ export async function submitInvestmentApi(body: any) {
 
 export async function suggestAllocationApi(body: any) {
     const { computeAllocations } = require('@/lib/allocation');
-    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-    const { funds, income, accruedInterest, allocationHistory } = body;
-    
-    const allocations = computeAllocations(funds, Number(income), 0);
-    const amountToAllocate = Number(income) || 0;
-    if (amountToAllocate <= 0 || allocations.length === 0) {
-      return { suggestions: [], summary: "Không có tiền để phân bổ." };
-    }
-    
-    // Fallback if no apiKey
-    if(!apiKey || apiKey === "null") {
-        return { suggestions: allocations.map((a:any) => ({ fundName: a.fundName, amount: a.amount, reason: "Phân bổ theo logic."})), summary: "Phân bổ tĩnh (Thiếu API Key AI)" };
-    }
-
-    const todayStr = new Date().toISOString().split('T')[0];
-    const totalAssets = funds.reduce((acc: number, f: any) => acc + (f.currentBalance || 0), 0) + (accruedInterest || 0);
-
-    const fmt = (n: number) => Math.round(n).toString();
-    const allocationLines = allocations.map((a:any) => `- ${a.fundName}: +${fmt(a.amount)} VND`).join('\n');
-
-    const prompt = `Bạn là trợ lý tài chính báo cáo kết quả:
-Số tiền: ${fmt(amountToAllocate)}
-KẾT QUẢ:
-${allocationLines}
-TRẢ VỀ JSON: { "suggestions": [ { "fundName": "...", "amount": <number>, "reason": "1 câu ngắn" } ], "summary": "1 câu tổng kết" }`;
-
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } })
-    });
-    const data = await response.json();
-    const content = data.candidates[0].content.parts[0].text;
-    const aiResult = JSON.parse(content);
-    return { suggestions: allocations.map((a:any) => ({ fundName: a.fundName, amount: a.amount, reason: aiResult.suggestions?.find((s:any)=>s.fundName === a.fundName)?.reason || '' })), summary: aiResult.summary };
+    // Gemini call is handled server-side via /api/allocation/suggest
+    throw new Error("suggestAllocationApi should not be called client-side");
 }
 
 export async function saveAllocationApi(body: any) {
