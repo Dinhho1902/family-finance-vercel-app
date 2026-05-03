@@ -180,6 +180,11 @@ export default function SavingsManager({ initialSavings }: { initialSavings: Sav
                   <td className="py-3 px-3 text-center">
                     <div className="text-xs text-slate-500">{fmtDate(sav.startDate)}</div>
                     <div className="text-xs font-bold text-indigo-600">{fmtDate(sav.maturityDate)}</div>
+                    {sav.maturityDate && isMounted && new Date(sav.maturityDate) < new Date() && (
+                      <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-600 animate-pulse">
+                        ⚠ Đến hạn tất toán
+                      </span>
+                    )}
                   </td>
                   <td className="py-3 px-3 text-right font-bold text-indigo-700">
                     {fmtNum(sav.principal + calcInterestBetween(sav.principal, sav.interestRate, sav.startDate, sav.maturityDate))}
