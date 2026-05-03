@@ -29,5 +29,5 @@ export function calcInterestBetween(principal: number, rate: number, start: stri
   const s = new Date(start);
   const e = new Date(end);
   const diffDays = Math.max(0, (e.getTime() - s.getTime()) / (1000 * 3600 * 24));
-  return Math.round(principal * (rate / 100) * (diffDays / 365.25));
+  return Math.round(principal * (rate / 100) * (diffDays / 360));
 }
