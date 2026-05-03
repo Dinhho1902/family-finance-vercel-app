@@ -1,4 +1,4 @@
-import { Transaction } from "@/lib/google-sheets";
+import { Transaction } from "@/lib/supabase";
 import { ArrowLeftRight, TrendingDown, TrendingUp } from "lucide-react";
 import { fmtNum } from "@/lib/utils";
 

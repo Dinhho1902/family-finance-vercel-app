@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Fund, Investment, Saving, Gold, AllocationRecord, HistoryPoint } from "@/lib/google-sheets";
+import { Fund, Investment, Saving, Gold, AllocationRecord, HistoryPoint } from "@/lib/supabase";
 import AllocationManager from "./AllocationManager";
 
 export default function AllocationPage() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Saving, Investment, Fund, Gold, Transaction } from "@/lib/google-sheets";
+import { Saving, Investment, Fund, Gold, Transaction } from "@/lib/supabase";
 import StatusGrid from "@/components/dashboard/StatusGrid";
 import AllocationChart from "@/components/dashboard/AllocationChart";
 import GoalProgress from "@/components/dashboard/GoalProgress";
