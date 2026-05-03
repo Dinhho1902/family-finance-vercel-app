@@ -2,11 +2,11 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { SignJWT, importPKCS8 } from 'jose';
 
 async function getAccessToken() {
-  const privateKeyRaw = process.env.NEXT_PUBLIC_GOOGLE_PRIVATE_KEY || process.env.GOOGLE_PRIVATE_KEY;
-  const email = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL || process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  
+  const privateKeyRaw = process.env.GOOGLE_PRIVATE_KEY;
+  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+
   if (!privateKeyRaw || !email) {
-    throw new Error('Thiếu cấu hình biến môi trường kết nối Google Sheets (Vui lòng cấu hình NEXT_PUBLIC_...)');
+    throw new Error('Thiếu cấu hình biến môi trường GOOGLE_PRIVATE_KEY hoặc GOOGLE_SERVICE_ACCOUNT_EMAIL');
   }
 
   const privateKey = privateKeyRaw.replace(/\\n/g, '\n');
@@ -35,7 +35,7 @@ async function getAccessToken() {
 }
 
 export async function getDoc() {
-  const sheetId = process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID || process.env.GOOGLE_SHEET_ID;
+  const sheetId = process.env.GOOGLE_SHEET_ID;
   if (!sheetId) throw new Error('Thiếu GOOGLE_SHEET_ID');
 
   const token = await getAccessToken();

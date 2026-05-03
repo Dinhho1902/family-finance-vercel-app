@@ -29,6 +29,9 @@ Thumbs.db
 .vercel
 .vercel/
 
+# Claude Code local settings
+.claude/
+
 # Misc
 *.log
 npm-debug.log*
