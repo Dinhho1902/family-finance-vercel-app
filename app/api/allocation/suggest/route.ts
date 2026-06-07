@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { computeAllocations, type RefinedFund } from '@/lib/allocation';
+import { checkOrigin, errorResponse } from '@/lib/api-utils';
 
 export async function POST(req: NextRequest) {
+  const forbidden = checkOrigin(req);
+  if (forbidden) return forbidden;
   try {
     const { funds, investments, savings, gold, income, accruedInterest, allocationHistory } = await req.json();
     const apiKey = process.env.GEMINI_API_KEY;
@@ -101,7 +104,14 @@ TRẢ VỀ JSON: { "suggestions": [ { "fundName": "...", "reason": "1 câu" } ],
     );
 
     const data = await response.json();
-    const content = data.candidates[0].content.parts[0].text;
+    const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!content) {
+      // AI unavailable/malformed — fall back to the deterministic allocation.
+      return NextResponse.json({
+        suggestions: allocations.map((a) => ({ fundName: a.fundName, amount: a.amount, reason: '' })),
+        summary: 'Phân bổ theo logic (AI tạm thời không khả dụng).',
+      });
+    }
     const aiResult = JSON.parse(content);
 
     return NextResponse.json({
@@ -113,6 +123,6 @@ TRẢ VỀ JSON: { "suggestions": [ { "fundName": "...", "reason": "1 câu" } ],
       summary: aiResult.summary,
     });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('POST /api/allocation/suggest', e);
   }
 }

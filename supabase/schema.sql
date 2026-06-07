@@ -100,17 +100,24 @@ alter table history       enable row level security;
 alter table allocations   enable row level security;
 alter table app_settings  enable row level security;
 
--- Service-role key (used server-side) bypasses RLS automatically.
--- These policies allow anon reads if you ever expose the anon key client-side.
--- Remove or tighten before going multi-user.
-create policy "allow_all_funds"         on funds         for all using (true) with check (true);
-create policy "allow_all_investments"   on investments   for all using (true) with check (true);
-create policy "allow_all_savings"       on savings       for all using (true) with check (true);
-create policy "allow_all_gold"          on gold          for all using (true) with check (true);
-create policy "allow_all_transactions"  on transactions  for all using (true) with check (true);
-create policy "allow_all_history"       on history       for all using (true) with check (true);
-create policy "allow_all_allocations"   on allocations   for all using (true) with check (true);
-create policy "allow_all_app_settings"  on app_settings  for all using (true) with check (true);
+-- The service-role key (used server-side only) bypasses RLS automatically, so
+-- ALL legitimate access goes through the Next.js API routes. The public anon
+-- key is shipped in the client bundle (unavoidable with Supabase), so it must
+-- have NO direct access to any table. With RLS enabled and no permissive
+-- policy, the anon/authenticated roles get zero rows on read and are blocked
+-- on write — closing the direct-REST-API auth bypass.
+--
+-- NOTE: a brand-new schema run never creates these policies. The drops below
+-- are idempotent cleanup for databases that already ran the old permissive
+-- version. Run this whole block in the Supabase SQL Editor to remediate.
+drop policy if exists "allow_all_funds"         on funds;
+drop policy if exists "allow_all_investments"   on investments;
+drop policy if exists "allow_all_savings"       on savings;
+drop policy if exists "allow_all_gold"          on gold;
+drop policy if exists "allow_all_transactions"  on transactions;
+drop policy if exists "allow_all_history"       on history;
+drop policy if exists "allow_all_allocations"   on allocations;
+drop policy if exists "allow_all_app_settings"  on app_settings;
 
 -- ============================================================
 -- Migration: ngăn chặn duplicate phân bổ cùng tháng

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { addTransaction, getSupabase } from '@/lib/supabase';
+import { checkOrigin, errorResponse } from '@/lib/api-utils';
 
 async function adjustFundBalance(fundName: string, delta: number) {
   const sb = getSupabase();
@@ -9,6 +10,8 @@ async function adjustFundBalance(fundName: string, delta: number) {
 }
 
 export async function POST(req: NextRequest) {
+  const forbidden = checkOrigin(req);
+  if (forbidden) return forbidden;
   try {
     const body = await req.json();
     const { type, sourceFund, destinationFund, amount } = body;
@@ -27,6 +30,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('POST /api/transactions', e);
   }
 }

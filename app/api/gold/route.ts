@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase, updateAppSetting } from '@/lib/supabase';
+import { checkOrigin, errorResponse } from '@/lib/api-utils';
 
 export async function POST(req: NextRequest) {
+  const forbidden = checkOrigin(req);
+  if (forbidden) return forbidden;
   try {
     const body = await req.json();
     const { actionType } = body;
@@ -60,6 +63,6 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json({ ok: true });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('POST /api/gold', e);
   }
 }

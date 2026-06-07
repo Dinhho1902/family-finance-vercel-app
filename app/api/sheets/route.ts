@@ -7,6 +7,7 @@ import {
   updateAppSetting, upsertFund, deleteFund, upsertInvestment,
   upsertSaving, deleteSaving, upsertGold, deleteGold, addTransaction,
 } from '@/lib/supabase';
+import { checkOrigin, errorResponse } from '@/lib/api-utils';
 
 // Simple in-memory cache (5 min TTL)
 const cache = new Map<string, { data: any; time: number }>();
@@ -69,11 +70,14 @@ export async function GET(req: NextRequest) {
     setCache(cacheKey, result);
     return NextResponse.json(result);
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('GET /api/sheets', e);
   }
 }
 
 export async function POST(req: NextRequest) {
+  const forbidden = checkOrigin(req);
+  if (forbidden) return forbidden;
+
   const resource = req.nextUrl.searchParams.get('resource');
   const body = await req.json();
 
@@ -119,6 +123,6 @@ export async function POST(req: NextRequest) {
     invalidateCache();
     return NextResponse.json({ ok: true });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('POST /api/sheets', e);
   }
 }

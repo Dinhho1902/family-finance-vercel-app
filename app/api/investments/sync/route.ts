@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getInvestmentsData, syncInvestmentPrice, updateAppSetting } from '@/lib/supabase';
+import { checkOrigin, errorResponse } from '@/lib/api-utils';
 
 export async function POST(req: NextRequest) {
+  const forbidden = checkOrigin(req);
+  if (forbidden) return forbidden;
   try {
     const investments = await getInvestmentsData();
     let updatedCount = 0;
@@ -34,6 +37,6 @@ export async function POST(req: NextRequest) {
     await updateAppSetting('last_investment_sync', new Date().toISOString());
     return NextResponse.json({ updatedCount, success: true });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('POST /api/investments/sync', e);
   }
 }

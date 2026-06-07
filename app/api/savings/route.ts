@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { checkOrigin, errorResponse } from '@/lib/api-utils';
 
 export async function POST(req: NextRequest) {
+  const forbidden = checkOrigin(req);
+  if (forbidden) return forbidden;
   try {
     const body = await req.json();
     const { actionType } = body;
@@ -33,9 +36,14 @@ export async function POST(req: NextRequest) {
       start_date: body.startDate || null,
       maturity_date: body.maturityDate || null,
     });
-    if (error) throw new Error(error.code === '23505' ? 'Tên ngân hàng đã tồn tại!' : error.message);
+    if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json({ error: 'Tên ngân hàng đã tồn tại!' }, { status: 409 });
+      }
+      throw error;
+    }
     return NextResponse.json({ ok: true });
   } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return errorResponse('POST /api/savings', e);
   }
 }

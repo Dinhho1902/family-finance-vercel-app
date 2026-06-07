@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { parseTickers } from '@/lib/api-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,8 +79,7 @@ function classifyPosition(supports: ReactionPoint[], resistances: ReactionPoint[
 }
 
 export async function GET(req: NextRequest) {
-  const tickersParam = req.nextUrl.searchParams.get('tickers') || '';
-  const tickers = tickersParam.split(',').filter(Boolean);
+  const tickers = parseTickers(req.nextUrl.searchParams.get('tickers'));
 
   const results = await Promise.all(tickers.map(async (ticker) => {
     try {
